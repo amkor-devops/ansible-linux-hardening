@@ -1,3 +1,3 @@
-- hosts: website
+- hosts: gssc-server
   roles:
   - deploy

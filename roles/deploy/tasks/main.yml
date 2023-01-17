@@ -1,10 +1,4 @@
-- name: Download and extract files
-  unarchive:
-    src: https://demo-builds.ansible-semaphore.com/build-v{{ semaphore_vars.task_details.incoming_version }}.tar.gz
-    dest: "{{ dest_path }}"
-    remote_src: True
+- name: Ping
+  become: true
+  ansible.builtin.ping:
 
-
-- name: Print version
-  debug:
-    msg: "Version {{ semaphore_vars.task_details.incoming_version }} is installed."
