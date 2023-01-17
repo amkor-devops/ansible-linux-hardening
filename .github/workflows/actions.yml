@@ -27,5 +27,5 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Deploy
-        run: ansible-playbook deploy.yml -i inv/dev/hosts $GSSC_PRIVATE_KEY --key-file "$GSSC_PRIVATE_KEY"
+        run: ansible-playbook deploy.yml -i invs/dev/hosts $GSSC_PRIVATE_KEY --key-file "$GSSC_PRIVATE_KEY"
 
