@@ -36,9 +36,7 @@ jobs:
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
           # Optional, literal inventory file contents
-          inventory: |
-            [gssc-server]
-            10.157.111.9
+   
           
           #  run: |
           #chmod 600 "$GSSC_PRIVATE_KEY"
