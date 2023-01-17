@@ -28,6 +28,6 @@ jobs:
       # Runs a single command using the runners shell
       - name: Deploy
         run: |
-          chmod 600 "$GSSC_PRICATE_KEY"
+          chmod 600 "$GSSC_PRIVATE_KEY"
           ansible-playbook deploy.yml -i invs/dev/hosts $GSSC_PRIVATE_KEY --key-file "$GSSC_PRIVATE_KEY"
 
