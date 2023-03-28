@@ -1,4 +1,136 @@
-- name: Ping
-  become: true
-  ansible.builtin.ping:
+#- hosts: all
+#  become: true
+
+    #- debug:
+    #    var: ansible_facts
+    #- name: install packages
+    #  become: yes
+    #  become_user: root
+    #  #become_method: sudo
+    #  action: >
+    #    {{ ansible_pkg_mgr }} name=htop state=present update_cache=yes
+#  vars:
+#    myuser: "mtaguiad"
+#    mypassword: "Therealdeal1"
+
+#  tasks:
+
+    - debug:
+        msg: "{{ansible_fqdn}}"
+
+##Ping hosts
+
+    - name: Ping
+      become: true
+      ansible.builtin.ping:
+
+
+##Install required packages        
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name:
+          - git
+          - postfix
+          - s-nail
+          - dnf-automatic
+        state: present
+
+
+##Disable SELinux          
+
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+
+
+##Update Postfix config
+
+    - name: Add config line to /etc/postfix/main.cf
+      blockinfile:
+        path: /etc/postfix/main.cf
+        block: |
+          myhostname = {{ ansible_hostname }}.my.ds.amkor.com
+          mydomain = my.ds.amkor.com
+          relayhost = mwlnsapp01.my.ds.amkor.com
+
+
+##Update dnf-automatic config
+
+    - name: Change line in /etc/dnf/automatic.conf
+      replace:
+        path: /etc/dnf/automatic.conf
+        regexp: "{{ item.regexp }}"
+        replace: "{{ item.replace }}"
+      loop:
+        - { regexp: 'upgrade_type = default', replace: 'upgrade_type = security' }
+        - { regexp: 'apply_updates = no', replace: 'apply_updates = yes' }
+        - { regexp: 'emit_via = stdio', replace: 'emit_via = email' }
+        - { regexp: 'email_from = root@example.com', replace: 'email_from = {{ ansible_hostname }}@my.ds.amkor.com' }
+        - { regexp: 'email_to = root', replace: 'email_to = emmanuel.encarnacion@amkor.com' }
+    
+
+##Update dnf-automatic.timer config
+
+    - name: Replace dnf-automatic schedule
+      lineinfile:
+        path: /usr/lib/systemd/system/dnf-automatic.timer
+        regexp: 'OnCalendar'
+        line: 'OnCalendar=Sat *-*-* 00:00:00'
+
+
+##Start postfix service
+
+    - name: Start service postfix
+      ansible.builtin.service:
+        name: postfix
+        state: started
+        enabled: yes
+
+
+##Stop firewalld service
+
+    - name: Stop service firewalld, if started
+      ansible.builtin.service:
+        name: firewalld
+        state: stopped
+        enabled: no
+
+
+##Restart dnf-automatic service
+
+    - name: Start service dnf-automatic
+      ansible.builtin.service:
+        name: dnf-automatic.service
+        state: restarted
+        enabled: yes
+      ignore_errors: yes
+
+
+##Start dnf-automatic.timer service
+
+    - name: Start service dnf-automatic
+      ansible.builtin.service:
+        name: dnf-automatic.timer
+        state: started
+        enabled: yes
+      ignore_errors: yes
+
+
+##Add user > Change password
+
+    - name: Add the user empenc
+      ansible.builtin.user:
+        name: "{{ myuser }}"
+        comment: Emmanuel Encarnacion
+        group: wheel
+
+    - name: Change password
+      ansible.builtin.user:
+        name: "{{ myuser }}"
+        state: present
+        password: "{{ mypassword | password_hash('sha512') }}"
+
+
+
 

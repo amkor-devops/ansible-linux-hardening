@@ -1,2 +1,26 @@
-[website]
-127.0.0.1 ansible_connection=ssh
+#[website]
+#127.0.0.1 ansible_connection=ssh
+
+
+##Sample Hosts
+#[gssc-server]
+#10.157.111.20
+
+##Sample Hosts Variables
+#[gssc-server:vars]
+#ansible_connection=ssh
+#ansible_user=root
+#ansible_ssh_pass=Amkor123!
+#ansible_sudo_pass=Amkor123!
+#ansible_ssh_private_key_file= ~/.ssh/id_rsa
+
+[musvnapp01]
+10.40.3.90
+
+[musvnapp01:vars]
+ansible_connection=ssh
+ansible_user=admin
+ansible_ssh_pass=Rokmamta@2203
+ansible_sudo_pass=Rokmamta@2203
+
+

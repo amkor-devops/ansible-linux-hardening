@@ -1,3 +1,6 @@
-- hosts: gssc-server
+- hosts: gssclprx
+
+  vars_files:
+    - invs/prod/vars.yml
   roles:
   - deploy

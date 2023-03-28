@@ -1,0 +1,8 @@
+      - debug:
+          msg: "{{ansible_fqdn}}, {{ myuser}}, {{ mypassword }}"
+
+##Ping hosts
+
+      - name: Ping
+        become: true
+        ansible.builtin.ping:
